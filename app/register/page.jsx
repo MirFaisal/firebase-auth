@@ -1,36 +1,41 @@
 "use client";
 import firebase_App from "@/utils/firebase.init";
 import {
+  createUserWithEmailAndPassword,
   getAuth,
-  sendPasswordResetEmail,
-  signInWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile,
 } from "firebase/auth";
 import Link from "next/link";
 import { useState } from "react";
 
-const SingIn = () => {
+const Register = () => {
   // email and password state
   const [email, setEmail] = useState();
   const [password, setpassword] = useState();
   const [errorMessage, setErrorMessage] = useState();
+  const [userName, setUserName] = useState();
+
   // firebase auth
   const auth = getAuth(firebase_App);
 
-  // handel submit form
   const handelOnSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
 
-    //firebase email pass provider for singin
-
-    signInWithEmailAndPassword(auth, email, password)
+    //firebase email pass provider for create user
+    createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
+        //show modal
+        sendModal("Cheack", "Send Email Verification");
+        //   resating form
         form.reset();
-        // modal.showModal();
-        sendModal("happy", "Login Successfuly to ");
+        //sent verification email
+        EmailVerification();
+        //update profile
+        updateUserProfile();
         console.log(user);
-        setEmail("");
       })
       .catch((error) => {
         const errorMsg = error.message;
@@ -39,28 +44,36 @@ const SingIn = () => {
             "The password is invalid or the user does not have a password."
           );
         }
-        modal_error.showModal();
         console.log(errorMessage);
         console.log(errorMsg);
       });
   };
+  // send email verification
+  const EmailVerification = () => {
+    sendEmailVerification(auth.currentUser).then(() => {
+      // Email verification sent!
+      // ...
+    });
+  };
 
-  // handel forgot password
-  const handelForgotPassword = () => {
-    if (!email) {
-      sendModal("Check", " Please Enter your email");
-      //   modal_missing_email.showModal();
-      return;
-    }
-    console.log("click");
-    sendPasswordResetEmail(auth, email)
+  // updating user profilee
+  const updateUserProfile = () => {
+    updateProfile(auth.currentUser, {
+      displayName: userName,
+    })
       .then(() => {
-        // modal_reset_email.showModal();
-        sendModal("Confirm Email", "Please cheack your");
+        console.log("Profile updated!");
       })
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  //user name on blur
+  const handelNameOnBlur = (e) => {
+    const userProvideName = e.target.value;
+    setUserName(userProvideName);
+    console.log(userProvideName);
   };
 
   // handel email on Blur
@@ -86,6 +99,7 @@ const SingIn = () => {
 
     main_modal.showModal();
   };
+
   return (
     <>
       {/* login form */}
@@ -102,6 +116,19 @@ const SingIn = () => {
           <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
             <div className="card-body">
               <form action="" onSubmit={() => handelOnSubmit(event)}>
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">User name</span>
+                  </label>
+                  <input
+                    onBlur={() => handelNameOnBlur(event)}
+                    type="text"
+                    name="name"
+                    placeholder="user name"
+                    required
+                    className="input input-bordered"
+                  />
+                </div>
                 <div className="form-control">
                   <label className="label">
                     <span className="label-text">Email</span>
@@ -134,11 +161,8 @@ const SingIn = () => {
                     >
                       Forgot password?
                     </p>
-                    <Link
-                      href="/register"
-                      className="label-text-alt link link-hover"
-                    >
-                      Are you in new ? SingUp Now
+                    <Link href="/" className="label-text-alt link link-hover">
+                      Already have an acount !
                     </Link>
                   </label>
                 </div>
@@ -191,4 +215,4 @@ const SingIn = () => {
   );
 };
 
-export default SingIn;
+export default Register;
