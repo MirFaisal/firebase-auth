@@ -1,13 +1,20 @@
 "use client";
 import firebase_App from "@/utils/firebase.init";
 import {
+  GithubAuthProvider,
+  GoogleAuthProvider,
   createUserWithEmailAndPassword,
   getAuth,
   sendEmailVerification,
+  signInWithPopup,
   updateProfile,
 } from "firebase/auth";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import facebook_logo from "../../public/facebook.svg";
+import github_logo from "../../public/github.svg";
+import google_logo from "../../public/google.svg";
 
 const Register = () => {
   // email and password state
@@ -18,6 +25,28 @@ const Register = () => {
 
   // firebase auth
   const auth = getAuth(firebase_App);
+
+  //goole auth provider
+  const googleAuthProvider = new GoogleAuthProvider();
+  const handelSingInWithGoogle = () => {
+    signInWithPopup(auth, googleAuthProvider)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user);
+      })
+      .catch((error) => console.log(error));
+  };
+  //github auth provider
+  const githubAuthProvider = new GithubAuthProvider();
+  const handelSingInWithGithub = () => {
+    signInWithPopup(auth, githubAuthProvider)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user);
+        emailVerification();
+      })
+      .catch((error) => console.log(error));
+  };
 
   const handelOnSubmit = (e) => {
     e.preventDefault();
@@ -32,7 +61,7 @@ const Register = () => {
         //   resating form
         form.reset();
         //sent verification email
-        EmailVerification();
+        emailVerification();
         //update profile
         updateUserProfile();
         console.log(user);
@@ -49,7 +78,7 @@ const Register = () => {
       });
   };
   // send email verification
-  const EmailVerification = () => {
+  const emailVerification = () => {
     sendEmailVerification(auth.currentUser).then(() => {
       // Email verification sent!
       // ...
@@ -103,18 +132,43 @@ const Register = () => {
   return (
     <>
       {/* login form */}
-      <div className="hero h-screen bg-base-200">
+      <div className="hero min-h-screen bg-base-200">
         <div className="hero-content flex-col lg:flex-row-reverse">
-          <div className="text-center lg:text-left px-20">
-            <h1 className="text-5xl font-bold">Login now!</h1>
+          <div className="text-center md:w-2/3 lg:text-left lg:px-20">
+            <h1 className="text-5xl font-bold">Register now!</h1>
             <p className="py-6">
               Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
               excepturi exercitationem quasi. In deleniti eaque aut repudiandae
               et a id nisi.
             </p>
           </div>
-          <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+          <div className="card flex-shrink-0 md:w-1/3 shadow-2xl bg-base-100">
             <div className="card-body">
+              <div className="pb-4">
+                <h2 className=" font-bold text-3xl">Create an account</h2>
+                <p className=" ps-1 text-xs">
+                  Enter your email below to create your accoun
+                </p>
+              </div>
+              {/* thard parti auth provider */}
+              <div className=" flex gap-x-16 justify-center">
+                <button
+                  className="btn"
+                  onClick={() => handelSingInWithGithub()}
+                >
+                  <Image src={github_logo} width={24} height={24} alt="" />
+                </button>
+                <button className="btn">
+                  <Image src={facebook_logo} width={24} height={24} alt="" />
+                </button>
+                <button
+                  className="btn"
+                  onClick={() => handelSingInWithGoogle()}
+                >
+                  <Image src={google_logo} width={24} height={24} alt="" />
+                </button>
+              </div>
+              <div className="divider">OR CONTINUE WITH</div>
               <form action="" onSubmit={() => handelOnSubmit(event)}>
                 <div className="form-control">
                   <label className="label">
@@ -172,7 +226,7 @@ const Register = () => {
                     className="btn btn-primary"
                     onClick={() => {}}
                   >
-                    Login
+                    Register
                   </button>
                 </div>
               </form>
