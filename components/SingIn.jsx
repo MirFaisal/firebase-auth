@@ -27,6 +27,7 @@ const SingIn = () => {
       .then((userCredential) => {
         const user = userCredential.user;
         form.reset();
+        setEmail("");
         modal.showModal();
         console.log(user);
       })
