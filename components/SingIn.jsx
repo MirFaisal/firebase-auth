@@ -27,9 +27,9 @@ const SingIn = () => {
       .then((userCredential) => {
         const user = userCredential.user;
         form.reset();
-        setEmail("");
         modal.showModal();
         console.log(user);
+        setEmail("");
       })
       .catch((error) => console.log(error));
   };
@@ -166,8 +166,8 @@ const SingIn = () => {
       <dialog id="modal_missing_email" className="modal">
         <form method="dialog" className="modal-box">
           <h3 className="font-bold text-lg">Check</h3>
-          <p className="py-4">
-            Please Inter your email{" "}
+          <p className="py-4 text-red-600">
+            Please Enter your email{" "}
             <a className=" underline" href="https://mail.google.com/">
               {email}{" "}
             </a>{" "}
