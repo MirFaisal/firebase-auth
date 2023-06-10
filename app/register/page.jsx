@@ -12,7 +12,6 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import facebook_logo from "../../public/facebook.svg";
 import github_logo from "../../public/github.svg";
 import google_logo from "../../public/google.svg";
 
@@ -44,6 +43,7 @@ const Register = () => {
         const user = userCredential.user;
         console.log(user);
         emailVerification();
+        sendModal("Cheack", "Send Email Verification");
       })
       .catch((error) => console.log(error));
   };
@@ -151,21 +151,21 @@ const Register = () => {
                 </p>
               </div>
               {/* thard parti auth provider */}
-              <div className=" flex gap-x-16 justify-center">
+              <div className=" flex justify-between">
                 <button
                   className="btn"
                   onClick={() => handelSingInWithGithub()}
                 >
                   <Image src={github_logo} width={24} height={24} alt="" />
+                  Github
                 </button>
-                <button className="btn">
-                  <Image src={facebook_logo} width={24} height={24} alt="" />
-                </button>
+
                 <button
                   className="btn"
                   onClick={() => handelSingInWithGoogle()}
                 >
                   <Image src={google_logo} width={24} height={24} alt="" />
+                  Google
                 </button>
               </div>
               <div className="divider">OR CONTINUE WITH</div>

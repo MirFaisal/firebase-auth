@@ -11,7 +11,6 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import facebook_logo from "../public/facebook.svg";
 import github_logo from "../public/github.svg";
 import google_logo from "../public/google.svg";
 
@@ -133,7 +132,7 @@ const SingIn = () => {
                 </p>
               </div>
               {/* thard parti auth provider */}
-              <div className=" flex gap-x-16 justify-center">
+              <div className=" flex justify-between">
                 <button
                   className="btn"
                   onClick={() => handelSingInWithGithub()}
@@ -144,15 +143,9 @@ const SingIn = () => {
                     height={24}
                     alt="github logo"
                   />
+                  Github
                 </button>
-                <button className="btn">
-                  <Image
-                    src={facebook_logo}
-                    width={24}
-                    height={24}
-                    alt="github logo"
-                  />
-                </button>
+
                 <button
                   className="btn"
                   onClick={() => handelSingInWithGoogle()}
@@ -163,6 +156,7 @@ const SingIn = () => {
                     height={24}
                     alt="github logo"
                   />
+                  Google
                 </button>
               </div>
               <div className="divider">OR CONTINUE WITH</div>
